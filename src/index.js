@@ -3,6 +3,9 @@ export { default as preventConflicts } from "./conflicts";
 export { default as Receiver } from "./core";
 export { default as deduplicateMessages } from "./dedup";
 export { default as allowLeech } from "./leech";
-export { default as redisBackend } from "./redis";
+import * as redis from "./redis";
 export { default as relayMessages } from "./relay";
-export { default as websocket } from "./websocket";
+import * as websocket from "./websocket";
+
+export const redisBackend = redis;
+export const websocketTransport = websocket;
