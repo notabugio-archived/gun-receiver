@@ -1,19 +1,19 @@
 {
-  "name": "webpack-library-starter",
-  "version": "1.0.2",
-  "description": "Produce universal library with webpack and es6",
-  "main": "lib/webpack-library-starter.js",
+  "name": "gun-receiver",
+  "version": "0.0.1",
+  "description": "Modular, server oriented implementation of gunDB protocol",
+  "main": "lib/gun-receiver.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build && npm run test",
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha --require babel-register --colors ./test/*.spec.js",
     "test:watch": "mocha --require babel-register --colors -w ./test/*.spec.js",
     "test:cover": "cross-env NODE_ENV=test nyc mocha --require babel-register --colors test/*.js",
-    "repl": "node -i -e \"$(< ./lib/webpack-library-starter.js)\""
+    "repl": "node -i -e \"$(< ./lib/gun-receiver.js)\""
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/krasimir/webpack-library-starter.git"
+    "url": "https://github.com/notabugio/gun-receiver.git"
   },
   "keywords": [
     "webpack",
@@ -24,12 +24,12 @@
     "umd",
     "commonjs"
   ],
-  "author": "Krasimir Tsonev",
+  "author": "go1dfish",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/krasimir/webpack-library-starter/issues"
+    "url": "https://github.com/notabugio/gun-receiver/issues"
   },
-  "homepage": "https://github.com/krasimir/webpack-library-starter",
+  "homepage": "https://github.com/notabugio/gun-receiver",
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.51",
     "@babel/core": "^7.0.0-beta.51",
@@ -44,17 +44,24 @@
     "cross-env": "^5.2.0",
     "eslint": "^5.0.1",
     "eslint-loader": "^2.0.0",
+    "flat": "^4.1.0",
     "jsdom": "11.11.0",
     "jsdom-global": "3.0.2",
     "mocha": "^4.0.1",
+    "nyc": "^13.1.0",
+    "redis": "^2.8.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "webpack": "^4.12.2",
     "webpack-cli": "^3.0.8",
-    "yargs": "^10.0.3",
-    "nyc": "^13.1.0"
+    "ws": "^6.1.2",
+    "yargs": "^10.0.3"
   },
   "nyc": {
     "sourceMap": false,
     "instrument": false
+  },
+  "peerDependencies": {
+    "ramda": "^0.26.1",
+    "uuid": "^3.3.2"
   }
 }
