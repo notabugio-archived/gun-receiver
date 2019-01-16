@@ -32,6 +32,7 @@ function pistolConnection({ db, send: sendFn }) {
   let hasReportedError = false;
   const get = p => path(p, state);
   const set = (p, v) => (state = assocPath(p, v, state)); // && console.log(state);
+  const msgId = () => uuid.v4();
   const send = msg =>
     db
       .processOut({ ...msg, to: connection })
@@ -60,7 +61,7 @@ function pistolConnection({ db, send: sendFn }) {
       .catch(err => console.error("PISTOL receive err", err, preserved));
   };
 
-  connection = { send, receive, get, set };
+  connection = { send, receive, get, set, msgId };
   return connection;
 }
 

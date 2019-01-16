@@ -51,7 +51,6 @@ const config = {
     flat: "flat",
     ramda: "ramda",
     ws: "ws",
-    redis: "redis",
     uuid: "uuid"
   }
 };
