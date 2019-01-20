@@ -1,6 +1,6 @@
 {
   "name": "gun-receiver",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Modular, server oriented implementation of gunDB protocol",
   "main": "lib/gun-receiver.js",
   "scripts": {

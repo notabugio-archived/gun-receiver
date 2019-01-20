@@ -48,8 +48,8 @@ function pistolConnection({ db, send: sendFn }) {
         }
         hasReportedError = true;
       });
-  const receive = ({ json, ...opts }) => {
-    const preserved = JSON.stringify(json, null, 2);
+  const receive = ({ json, raw, ...opts }) => {
+    const preserved = raw || JSON.stringify(json, null, 2);
 
     return db
       .processIn({

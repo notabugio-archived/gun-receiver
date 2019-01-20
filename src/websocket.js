@@ -9,8 +9,10 @@ const wsConnection = curry((db, ws) => {
   let connected = true;
 
   const connection = db.connected(msg => {
-    if (!msg || !msg.json || !connected) return;
-    ws.send(JSON.stringify(msg.json), err => {
+    if (!msg || !(msg.json || msg.raw) || !connected) return;
+    const raw = msg.raw || JSON.stringify(msg.json);
+
+    ws.send(raw, err => {
       if (!err || hasLoggedErr) return;
       console.warn("ws send err", err);
       hasLoggedErr = true;
@@ -24,11 +26,12 @@ const wsConnection = curry((db, ws) => {
 
   const receive = msg => {
     try {
-      const json = JSON.parse(msg.data || msg);
+      const raw = msg.data || msg;
+      const json = JSON.parse(raw);
 
       Array.isArray(json)
         ? json.forEach(receive)
-        : connection.receive({ json });
+        : connection.receive({ json, raw });
     } catch (e) {
       console.error("RECEIVER invalid ws msg", e, msg.data);
     }
