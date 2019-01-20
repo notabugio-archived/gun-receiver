@@ -1,14 +1,15 @@
-import { path } from "ramda";
-const MAX_MSG_ID_CACHE = 10000;
+import { path, keys } from "ramda";
+const MAX_MSG_ID_CACHE = 50000;
+const GARBAGE_INTERVAL = 60000;
 
 export default db => {
   const receivedIds = {};
 
   function collectGarbage() {
-    let ids;
+    let ids = keys(receivedIds).reverse();
 
-    while ((ids = Object.keys(receivedIds)).length > MAX_MSG_ID_CACHE) {
-      delete receivedIds[ids[0]];
+    while (ids.length > MAX_MSG_ID_CACHE) {
+      delete receivedIds[ids.pop()];
     }
   }
 
@@ -17,9 +18,10 @@ export default db => {
 
     if (!id || id in receivedIds) return null;
     receivedIds[id] = true;
-    collectGarbage();
     return msg;
   });
+
+  setInterval(collectGarbage, GARBAGE_INTERVAL);
 
   return db;
 };
