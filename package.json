@@ -1,6 +1,6 @@
 {
   "name": "gun-receiver",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Modular, server oriented implementation of gunDB protocol",
   "main": "lib/gun-receiver.js",
   "scripts": {
@@ -49,6 +49,7 @@
     "jsdom-global": "3.0.2",
     "mocha": "^4.0.1",
     "nyc": "^13.1.0",
+    "pm2": "^3.2.9",
     "ramda": "^0.26.1",
     "reconnecting-websocket": "^4.1.10",
     "uglifyjs-webpack-plugin": "^1.2.7",
@@ -63,6 +64,7 @@
     "instrument": false
   },
   "peerDependencies": {
+    "pm2": "^3.2.9",
     "ramda": "^0.26.1",
     "reconnecting-websocket": "^4.1.10",
     "uuid": "^3.3.2"

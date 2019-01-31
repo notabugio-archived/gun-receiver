@@ -1,11 +1,12 @@
-import { without } from "ramda";
+import * as R from "ramda";
+
 module.exports = db => {
   db.onIn(msg => {
-    const { from, json, noRelay } = msg;
+    const { from, noRelay } = msg;
 
     if (noRelay) return msg;
-    without([from], db.connections).forEach(c =>
-      c.send({ from, json, skipValidation: true })
+    R.without([from], db.connections).forEach(c =>
+      c.send(R.assoc("skipValidation", true, msg))
     );
     return msg;
   });

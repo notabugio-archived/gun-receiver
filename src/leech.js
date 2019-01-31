@@ -2,6 +2,7 @@ import { path, keys } from "ramda";
 
 export default db => {
   db.onIn(msg => {
+    if (!msg.from || !msg.from.set) return msg;
     if (path(["json", "leech"], msg)) {
       msg.from.set(["isLeeching"], true);
       return undefined;

@@ -49,9 +49,13 @@ const config = {
   },
   externals: {
     flat: "flat",
+    pm2: "pm2",
     ramda: "ramda",
     ws: "ws",
     uuid: "uuid"
+  },
+  node: {
+    process: false
   }
 };
 
