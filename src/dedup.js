@@ -16,7 +16,7 @@ export default db => {
   db.onIn(msg => {
     const id = path(["json", "#"], msg);
 
-    if (!id || id in receivedIds) return null;
+    if (!id || receivedIds[id]) return null;
     receivedIds[id] = true;
     return msg;
   });

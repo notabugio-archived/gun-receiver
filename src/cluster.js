@@ -10,7 +10,7 @@ module.exports = db => {
   pm2.launchBus((err, bus) => {
     if (err) console.err(err);
     bus.on("process:msg", packet => {
-      if (packet.raw.fromCluster === id) return;
+      if (packet.raw.msg.fromCluster === id) return;
       if (packet.raw.topic === MSG_TOPIC) {
         db.processIn(R.assoc("db", db, packet.raw.msg)).catch(err =>
           console.error("PISTOL cluster err", err)
@@ -25,9 +25,8 @@ module.exports = db => {
     if (noRelay || fromCluster) return msg;
     if (process.send) {
       process.send({
-        fromCluster: id,
         topic: MSG_TOPIC,
-        msg: R.mergeLeft({ fromCluster: true, skipValidation: true }, msg)
+        msg: R.mergeLeft({ fromCluster: id, skipValidation: true }, msg)
       });
     }
     return msg;
