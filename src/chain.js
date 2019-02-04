@@ -1,5 +1,6 @@
 /* globals Promise */
-import { identity, keys, prop, path } from "ramda";
+import * as R from "ramda";
+import uuid from "uuid";
 
 export default db => {
   const getPath = (keyList, opts = {}) => {
@@ -10,17 +11,23 @@ export default db => {
       const bound = fn.bind(thisChain);
       const received = val => (hasResponse = true) && bound((value = val));
       const requested = {};
+      const requests = {};
       const graph = {};
 
       const connection = db.connected(msg => {
         const { json } = msg;
+        const at = R.prop("@", json);
+        const atSoul = requests[at];
+        const souls = R.keys(R.prop("put", json));
 
-        keys(prop("put", json)).forEach(soul => {
+        if (atSoul) souls.push(atSoul);
+        if (!souls.length) return;
+        R.uniq(souls).forEach(soul => {
           if (!requested[soul]) return;
-          const node = path(["put", soul], json);
+          const node = R.path(["put", soul], json);
 
           if (!node && !hasResponse) received();
-          if (node) graph[soul] = node;
+          if (node) graph[soul] = R.mergeDeepLeft(node, graph[soul] || {});
         });
         const nextValue = getValue(keyList);
 
@@ -29,10 +36,13 @@ export default db => {
 
       const getNode = soul => {
         if (requested[soul]) return graph[soul];
-        requested[soul] = true;
+        const id = uuid.v4();
+
+        requested[soul] = id;
+        requests[id] = soul;
         connection.receive({
           ...opts,
-          json: { get: { "#": soul } },
+          json: { "#": id, get: { "#": soul } },
           skipValidation: true
         });
         return graph[soul];
@@ -45,7 +55,7 @@ export default db => {
         const parentValue = getValue(kl.slice(0, kl.length - 1));
 
         if (!parentValue) return undefined;
-        const value = prop(lastKey, parentValue);
+        const value = R.prop(lastKey, parentValue);
 
         if (value && value["#"]) return getNode(value["#"]);
         if (kl === keyList) received(value);
@@ -57,7 +67,7 @@ export default db => {
       return () => db.disconnected(connection);
     };
 
-    const then = (fn = identity) =>
+    const then = (fn = R.identity) =>
       new Promise(resolve => {
         const unsubscribe = on(val => {
           resolve(val);
@@ -72,6 +82,26 @@ export default db => {
     return thisChain;
   };
 
+  const getDiff = put => {
+    const souls = R.keys(put);
+    const diffs = {};
+
+    if (!souls.length) return Promise.resolve({});
+    return Promise.all(
+      souls.map(soul =>
+        db.get(soul, { noRelay: true }).then(existing => {
+          const diff = db.diffNode(existing, put[soul]);
+
+          if (diff) diffs[soul] = diff;
+        })
+      )
+    ).then(() => {
+      if (!R.keys(diffs).length) return null;
+      return diffs;
+    });
+  };
+
   db.get = (key, opts = {}) => getPath([key], opts);
+  db.getDiff = getDiff;
   return db;
 };

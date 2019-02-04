@@ -1,6 +1,7 @@
 /* globals Promise */
 import { assocPath, path, without } from "ramda";
 import uuid from "uuid";
+import { diffNode } from "./diff";
 
 function processQueue() {
   let fns = [];
@@ -55,7 +56,7 @@ function pistolConnection({ db, send: sendFn }) {
       .processIn({
         ...opts,
         db,
-        json: { ...json, "#": json["#"] || uuid.v4() },
+        json: { ...json, "#": json["#"] || msgId() },
         from: connection
       })
       .catch(err => console.error("PISTOL receive err", err, preserved));
@@ -91,7 +92,8 @@ export default function Receiver() {
     onIn,
     onOut,
     processIn,
-    processOut
+    processOut,
+    diffNode
   };
   return peer;
 }
