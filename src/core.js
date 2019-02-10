@@ -33,7 +33,7 @@ function pistolConnection({ db, send: sendFn }) {
   let hasReportedError = false;
   const get = p => path(p, state);
   const set = (p, v) => (state = assocPath(p, v, state)); // && console.log(state);
-  const msgId = () => uuid.v4();
+  const { msgId } = db;
   const send = msg =>
     db
       .processOut({ ...msg, to: connection })
@@ -50,8 +50,6 @@ function pistolConnection({ db, send: sendFn }) {
         hasReportedError = true;
       });
   const receive = ({ json, raw, ...opts }) => {
-    const preserved = raw || JSON.stringify(json, null, 2);
-
     return db
       .processIn({
         ...opts,
@@ -59,7 +57,7 @@ function pistolConnection({ db, send: sendFn }) {
         json: { ...json, "#": json["#"] || msgId() },
         from: connection
       })
-      .catch(err => console.error("PISTOL receive err", err, preserved));
+      .catch(err => console.error("PISTOL receive err", err, raw || json));
   };
 
   connection = { send, receive, get, set, msgId };
@@ -71,6 +69,8 @@ export default function Receiver() {
   const connections = [];
   const [onIn, processIn] = processQueue();
   const [onOut, processOut] = processQueue();
+  const msgId = () => uuid.v4();
+  const stringify = JSON.stringify;
 
   function connected(send) {
     const connection = pistolConnection({ db: peer, send });
@@ -89,10 +89,12 @@ export default function Receiver() {
     connections,
     connected,
     disconnected,
+    msgId,
     onIn,
     onOut,
     processIn,
     processOut,
+    stringify,
     diffNode
   };
   return peer;

@@ -10,7 +10,7 @@ const wsConnection = curry((db, ws) => {
 
   const connection = db.connected(msg => {
     if (!msg || !(msg.json || msg.raw) || !connected) return;
-    const raw = msg.raw || JSON.stringify(msg.json);
+    const raw = msg.raw || db.stringify(msg.json);
 
     ws.send(raw, err => {
       if (!err || hasLoggedErr) return;
