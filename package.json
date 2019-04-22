@@ -1,15 +1,15 @@
 {
-  "name": "gun-receiver",
+  "name": "@notabug/gun-receiver",
   "version": "0.5.0",
   "description": "Modular, server oriented implementation of gunDB protocol",
-  "main": "lib/gun-receiver.js",
+  "main": "lib/@notabug/gun-receiver.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build && npm run test",
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha --require babel-register --colors ./test/*.spec.js",
     "test:watch": "mocha --require babel-register --colors -w ./test/*.spec.js",
     "test:cover": "cross-env NODE_ENV=test nyc mocha --require babel-register --colors test/*.js",
-    "repl": "node -i -e \"$(< ./lib/gun-receiver.js)\""
+    "repl": "node -i -e \"$(< ./lib/@notabug/gun-receiver.js)\""
   },
   "repository": {
     "type": "git",
