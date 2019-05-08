@@ -15,7 +15,10 @@ export default db => {
       const graph = {};
 
       const connection = db.connected(msg => {
-        const { json } = msg;
+        let { json } = msg;
+
+        if (!json && msg.raw) json = JSON.parse(msg.raw);
+        msg.json = json;
         const at = R.prop("@", json);
         const atSoul = requests[at];
         const souls = R.keys(R.prop("put", json));
