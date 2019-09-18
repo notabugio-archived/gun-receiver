@@ -20,20 +20,20 @@ const wsConnection = curry((db, ws) => {
   });
 
   const pingInterval = setInterval(
-    () => connection.send({ json: { ping: true }, skipValidation: true }),
+    () => connection.send({ json: [], skipValidation: true }),
     PING
   );
 
   const receive = msg => {
     try {
       const raw = msg.data || msg;
-      const json = JSON.parse(raw);
+      const json = typeof raw === "string" ? JSON.parse(raw) : raw;
 
       Array.isArray(json)
         ? json.forEach(receive)
         : connection.receive({ json, raw });
     } catch (e) {
-      console.error("RECEIVER invalid ws msg", e, msg.data);
+      console.error("RECEIVER invalid ws msg", e, msg.data || msg);
     }
   };
 
