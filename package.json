@@ -44,7 +44,7 @@
     "cross-env": "^5.2.0",
     "eslint": "^5.0.1",
     "eslint-loader": "^2.0.0",
-    "flat": "^4.1.0",
+    "flat": "^5.0.1",
     "jsdom": "11.11.0",
     "jsdom-global": "3.0.2",
     "mocha": "^4.0.1",
